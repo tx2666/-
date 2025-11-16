@@ -1,5 +1,6 @@
-.ssh/config
 # 忽略.ssh的config
+.ssh/config
+# 中间文件
 *.bak
 *.ddk
 *.edk
@@ -26,6 +27,7 @@ JLinkLog.txt
 *.map
 # 这个根据电脑来的，忽略掉
 *.ASUS
+# vscode的配置文件
 .vscode/c_cpp_properties.json
 .vscode/keil-assistant.log
 .vscode/uv4.log
