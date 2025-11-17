@@ -17,6 +17,10 @@ uint8_t Mode = 0;
 
 int main(void)
 {
+	OLED_Init();
+
+	OLED_ShowString(1, 1, "OK");
+
 	while (1)
 	{
 		
