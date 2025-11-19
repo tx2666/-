@@ -33,3 +33,4 @@ JLinkLog.txt
 .vscode/uv4.log
 .vscode/uv4.log.lock
 .vscode/settings.json
+.vscode/tasks.json
