@@ -168,13 +168,14 @@ void Key_Tick(void)
             else if (Prev_KeyNum[i] & KEY_PRESSING != 0x0 && KeyNum[i] & KEY_PRESSING != 0x0)
             {
                 count[i][1] += 20;
-                if (count[1] >= 5*20)
+                if (count[i][1] >= 5*20)
                 {
                     // 时长大于100ms，置一次标志位
                     Key_SetFlag(i, KEY_LONG);
                     count[i][1] = 0;
                 } 
             }
+            /* 松手 */
             else if (Prev_KeyNum[i] & KEY_PRESSING != 0x0 && KeyNum[i] & KEY_PRESSING == 0x0)
             {
                 // 上一次为1，这一次为0
@@ -206,8 +207,9 @@ void Key_Tick(void)
                     count[i][2] = 0;
                 }
             }
+
         }
-        
+        // 计时器归零
         count[0][0] = 0;
     }
 }
