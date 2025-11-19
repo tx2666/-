@@ -24,6 +24,8 @@ int main(void)
 	UI_Show(&UI_root);
 	UIpos = UI_root.Num;
 	
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	
 	while (1)
 	{
 		if (UIpos == UI_root.Num)

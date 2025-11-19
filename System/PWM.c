@@ -37,7 +37,7 @@ void PWM_Init(void)
 	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;		// 极性不反转
 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;	// 输出启用
 	TIM_OCInitStructure.TIM_Pulse = 0;								// 占空比0/1000
-	TIM_OC3Init(TIM2, &TIM_OCInitStructure);
+	TIM_OC1Init(TIM2, &TIM_OCInitStructure);
 	
 	// TIM2 Channel 2
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;				// PWM模式1
@@ -48,16 +48,24 @@ void PWM_Init(void)
 	
 	// TIM2使能
 	TIM_Cmd(TIM2, ENABLE);
-	
-	Serial_Printf("PWM Init End\r\n");
 }
 
+/**
+ * @brief 设置TIM2_CH1输出的PWM波的占空比
+ * @param Compare 占空比，只接受正数
+ * @retval 无
+ */
+void PWM_SetCompare1(uint16_t Compare)
+{
+	TIM_SetCompare1(TIM2, Compare);
+}
+
+/**
+ * @brief 设置TIM2_CH2输出的PWM波的占空比
+ * @param Compare 占空比，只接受正数
+ * @retval 无
+ */
 void PWM_SetCompare2(uint16_t Compare)
 {
 	TIM_SetCompare2(TIM2, Compare);
-}
-
-void PWM_SetCompare3(uint16_t Compare)
-{
-	TIM_SetCompare3(TIM2, Compare);
 }
