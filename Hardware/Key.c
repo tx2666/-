@@ -1,17 +1,17 @@
 #include "stm32f10x.h"                  // Device header
 #include "Delay.h"
 
-#define KEY_NONE            0x0000
-#define KEY_PRESS           0x0001
-#define KEY_RELEASE         0x0002
-#define KEY_DOUBLE          0x0004
-#define KEY_TRINPLE         0x0008
-#define KEY_PRESSING        0x0010
-#define KEY_LONG            0x0020
+#define KEY_NONE            0x0000      // 没有任何操作时
+#define KEY_PRESS           0x0001      // 单次按下按钮
+#define KEY_RELEASE         0x0002      // 释放按钮瞬间
+#define KEY_DOUBLE          0x0004      // 双击按钮
+#define KEY_TRINPLE         0x0008      // 我要三连
+#define KEY_PRESSING        0x0010      // 按下中
+#define KEY_LONG            0x0020      // 长按
 
-#define KEY_COUNT 4
+#define KEY_COUNT           4           // 按钮总数
 
-#define KEY_UP              0
+#define KEY_UP              0           // 编号
 #define KEY_DOWN            1
 #define KEY_CONFIRM         2
 #define KEY_CANCEL          3
@@ -86,7 +86,7 @@ void Key_ClearFlag(uint8_t Key, uint8_t KeyFlag)
  */
 uint8_t Key_GetState(uint8_t Key, uint8_t KeyFlag)
 {
-    if (KeyNum[Key] & KeyFlag != 0x0)
+    if ((KeyNum[Key] & KeyFlag) != 0x0)
     {
         if (KeyFlag == KEY_PRESSING)
             return 1;
@@ -100,6 +100,7 @@ uint8_t Key_GetState(uint8_t Key, uint8_t KeyFlag)
 void Key_Tick(void)
 {
     static uint16_t count[KEY_COUNT][4] = {0};
+    count[0][0] ++;
     /**
      * 说明
      * count[0][0] 用于扫描
@@ -154,57 +155,59 @@ void Key_Tick(void)
             Key_ClearFlag(KEY_CANCEL, KEY_PRESSING);
         }
         /* 判断部分 */
-        for (int i = 0; i < KEY_COUNT; i++)
+        for (int Key = 0; Key < KEY_COUNT; Key++)
         {
             /* 刚按下 */
-            if      (Prev_KeyNum[i] & KEY_PRESSING == 0x0 && KeyNum[i] & KEY_PRESSING != 0x0)
+            if      (((Prev_KeyNum[Key] & KEY_PRESSING) == 0x0) && ((KeyNum[Key] & KEY_PRESSING) != 0x0))
             {
                 // 上一次按钮pressing为0，这一次为1时，认为按钮刚刚按下
                 // 只有pressing置0时，第一个表达式的值才为0x0
-                Key_SetFlag(i, KEY_PRESS);
-                count[i][2] = 0;
+                // Key_SetFlag(Key, KEY_PRESS);
+                count[Key][2] = 0;
             }
             /* 按住 */
-            else if (Prev_KeyNum[i] & KEY_PRESSING != 0x0 && KeyNum[i] & KEY_PRESSING != 0x0)
+            else if (((Prev_KeyNum[Key] & KEY_PRESSING) != 0x0) && ((KeyNum[Key] & KEY_PRESSING) != 0x0))
             {
-                count[i][1] += 20;
-                if (count[i][1] >= 5*20)
+                count[Key][1] += 20;
+                if (count[Key][1] >= 5*20)
                 {
                     // 时长大于100ms，置一次标志位
-                    Key_SetFlag(i, KEY_LONG);
-                    count[i][1] = 0;
+                    Key_SetFlag(Key, KEY_LONG);
+                    count[Key][1] = 0;
                 } 
             }
             /* 松手 */
-            else if (Prev_KeyNum[i] & KEY_PRESSING != 0x0 && KeyNum[i] & KEY_PRESSING == 0x0)
+            else if (((Prev_KeyNum[Key] & KEY_PRESSING) != 0x0) && ((KeyNum[Key] & KEY_PRESSING) == 0x0))
             {
                 // 上一次为1，这一次为0
-                count[i][1] = 0;  // 松开之后，长按计数归零
-                count[i][3] ++;  // 松开之后，连续点击次数加1
-                Key_SetFlag(i, KEY_RELEASE);
-                count[i][2] += 20;  // 松开时间的计数器开始计时
+                count[Key][1] = 0;  // 松开之后，长按计数归零
+                count[Key][3] ++;  // 松开之后，连续点击次数加1
+                Key_SetFlag(Key, KEY_RELEASE);
+                count[Key][2] = 0;
+                count[Key][2] += 20;  // 松开时间的计数器开始计时
                 // 由于是每20ms触发一次，所以一次增加20
             }
 
-            if (count[i][2] > 0 && KeyNum[i] & KEY_PRESSING == 0x0)
+            if (count[Key][2] > 0 && ((KeyNum[Key] & KEY_PRESSING) == 0x0))
             {
-                count[i][2] += 20;
-                if (count[i][2] >= 20*5)
+                count[Key][2] += 20;
+                if (count[Key][2] >= 20*5)
                 {
-                    if (count[i][3] >= 3)               // 3连
+                    if (count[Key][3] >= 3)               // 3连
                     {
-                        Key_SetFlag(i, KEY_TRINPLE);
+                        Key_SetFlag(Key, KEY_TRINPLE);
                     }
-                    else if (count[i][3] >= 2)          // 2连
+                    else if (count[Key][3] >= 2)          // 2连
                     {
-                        Key_SetFlag(i, KEY_DOUBLE);
+                        Key_SetFlag(Key, KEY_DOUBLE);
                     }
-                    else if (count[i][3] >= 1)
+                    else if (count[Key][3] >= 1)
                     {
-                        Key_SetFlag(i, KEY_PRESS);
+                        Key_SetFlag(Key, KEY_PRESS);
                     }
                     
-                    count[i][2] = 0;
+                    count[Key][2] = 0;
+                    count[Key][3] = 0;
                 }
             }
 

@@ -65,7 +65,7 @@ void UI_Init(void)
     /* Start菜单 */
     UI_start.exist_title = 1;
     strcpy(UI_start.line1, "Start");
-    strcpy(UI_start.line2, "Press Key3 to start");
+    strcpy(UI_start.line2, "Press to start");
     strcpy(UI_start.line3, "");
     strcpy(UI_start.line4, "");
     UI_start.default_cursor = 2;
@@ -78,9 +78,9 @@ void UI_Init(void)
     strcpy(UI_PID.line2, "Kp");
     strcpy(UI_PID.line3, "Ki");
     strcpy(UI_PID.line4, "Kd");
-    UI_PID.default_cursor = 2;
-    UI_PID.cursor  = 2;
-    UI_PID.cursor0 = 2;
+    UI_PID.default_cursor = 1;
+    UI_PID.cursor  = 1;
+    UI_PID.cursor0 = 1;
     UI_PID.Num = 2;
 }
 
@@ -162,7 +162,7 @@ void UI_MoveDown_Cursor(UI_typedef *UI_Structure)
  * @param UI_Structure 界面文字信息的存储变量
  * @retval 无
  */
-void UI_MoveUP_Cursor(UI_typedef *UI_Structure)
+void UI_MoveUp_Cursor(UI_typedef *UI_Structure)
 {
     UI_Structure->cursor0 = UI_Structure->cursor;
     UI_Structure->cursor--;
