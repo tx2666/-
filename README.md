@@ -1,13 +1,13 @@
 # 红外循迹小车 #
 ## 引脚分配 ##
 ### GPIOA ###
-*PA0* **TIM2_CH1**
+*PA0* **TIM2_CH1** 输出PWM波
 
-*PA1* **TIM2_CH1**
+*PA1* **TIM2_CH1** 输出PWM波
 
-*PA2* **TIM2_CH3** 输出PWM波
+*PA2* **TIM2_CH3** 
 
-*PA3* **TIM2_CH3** 输出PWM波
+*PA3* **TIM2_CH4** 
 
 *PA4* 电机方向控制
 
