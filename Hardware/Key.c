@@ -1,20 +1,20 @@
 #include "stm32f10x.h"                  // Device header
 #include "Delay.h"
 
-#define KEY_NONE            0x0000      // 没有任何操作时
-#define KEY_PRESS           0x0001      // 单次按下按钮
-#define KEY_RELEASE         0x0002      // 释放按钮瞬间
-#define KEY_DOUBLE          0x0004      // 双击按钮
-#define KEY_TRINPLE         0x0008      // 我要三连
-#define KEY_PRESSING        0x0010      // 按下中
-#define KEY_LONG            0x0020      // 长按
+#define KEY_NONE            ((uint8_t)0x0000)       // 没有任何操作时
+#define KEY_PRESS           ((uint8_t)0x0001)       // 单次按下按钮
+#define KEY_RELEASE         ((uint8_t)0x0002)       // 释放按钮瞬间
+#define KEY_DOUBLE          ((uint8_t)0x0004)       // 双击按钮
+#define KEY_TRINPLE         ((uint8_t)0x0008)       // 我要三连
+#define KEY_PRESSING        ((uint8_t)0x0010)       // 按下中
+#define KEY_LONG            ((uint8_t)0x0020)       // 长按
 
-#define KEY_COUNT           4           // 按钮总数
+#define KEY_COUNT           (4)                     // 按钮总数
 
-#define KEY_UP              0           // 编号
-#define KEY_DOWN            1
-#define KEY_CONFIRM         2
-#define KEY_CANCEL          3
+#define KEY_UP              (0)                     // 编号
+#define KEY_DOWN            (1)
+#define KEY_CONFIRM         (2)
+#define KEY_CANCEL          (3)
 
 uint8_t Prev_KeyNum[KEY_COUNT] =    {0x0000};
 uint8_t KeyNum[KEY_COUNT] =         {0x0000};
