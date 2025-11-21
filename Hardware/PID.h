@@ -21,17 +21,17 @@ typedef struct {
 	uint16_t Count2;
 } PID_Data_Typedef;
 
-typedef struct
-{
-	uint8_t Motor_Num;
-	PID_Mode Mode;
-	PID_Data_Typedef PID_Data_Structure;
-} PID_Tick_Typedef;
-
 typedef enum {
 	POSTION = 0,
 	ADDITION = 1
 } PID_Mode;
+
+typedef struct
+{
+	uint8_t Motor_Num;
+	PID_Mode Mode;
+	PID_Data_Typedef pPID_Data_Structure;
+} PID_Tick_Typedef;
 
 /* 函数部分 */
 void PID_TypedefStructInit(PID_Data_Typedef *PID_Struct);							// 结构体初始化赋值

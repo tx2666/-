@@ -24,18 +24,19 @@ typedef struct {
 	uint16_t Count2;
 } PID_Data_Typedef;
 
-typedef struct
-{
-	uint8_t Motor_Num;
-	PID_Mode Mode;
-	PID_Data_Typedef PID_Data_Structure;
-} PID_Tick_Typedef;
-
-
 typedef enum {
 	POSTION = 0,
 	ADDITION = 1
 } PID_Mode;
+
+typedef struct
+{
+	uint8_t Motor_Num;
+	PID_Mode Mode;
+	PID_Data_Typedef *pPID_Data_Structure;
+} PID_Tick_Typedef;
+
+
 /**
  * @brief PID调控电机速度函数
  * @param Motor_Num 电机编号，从1开始编号
@@ -145,7 +146,7 @@ void PID_Tick(PID_Tick_Typedef *PID_Tick_Structure)
 	if (count >= 10)
 	{
 		PID_Motor_Control(PID_Tick_Structure->Motor_Num,
-			 &(PID_Tick_Structure->PID_Data_Structure),
+			 (PID_Tick_Structure->pPID_Data_Structure),
 			  PID_Tick_Structure->Mode);
 		count = 0;
 	}

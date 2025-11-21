@@ -21,6 +21,8 @@ int main(void)
 {
 	Key_Init();
 	Timer_Init();
+	Encoder_Init();
+	Motor_Init();
 	UI_Init();
 	UI_Show(&UI_root);
 	UIpos = UI_root.Num;
@@ -44,12 +46,16 @@ int main(void)
 			UI_Show_PID(pPID_Motor->Kp, pPID_Motor->Ki, pPID_Motor->Kd);
 			if (pPID_Motor == &PID_Motor1)
 			{
-				UI_Show_Motor_Num(1);
+				UI_PID_Show_Motor_Num(1);
 			}
 			else if (pPID_Motor == &PID_Motor2)
 			{
-				UI_Show_Motor_Num(2);
+				UI_PID_Show_Motor_Num(2);
 			}
+		}
+		else if (UIpos == UI_test.Num)
+		{
+			UI_Show(&UI_test);
 		}
 		/* 按钮检测 */
 		/* 上 */
@@ -83,6 +89,17 @@ int main(void)
 				else if (Edit_Mode == 0)
 				{
 					UI_MoveUp_Cursor(&UI_PID);
+				}
+			}
+			else if (UIpos == UI_test.Num)
+			{
+				if (Edit_Mode == 1)
+				{
+
+				}
+				else if (Edit_Mode == 0)
+				{
+					UI_MoveUp_Cursor(&UI_test);
 				}
 			}
 		}
@@ -119,6 +136,17 @@ int main(void)
 					UI_MoveDown_Cursor(&UI_PID);
 				}
 			}
+			else if (UIpos == UI_test.Num)
+			{
+				if (Edit_Mode == 1)
+				{
+
+				}
+				else if (Edit_Mode == 0)
+				{
+					UI_MoveDown_Cursor(&UI_test);
+				}
+			}
 		}
 		/* 确定 */
 		if (Key_GetState(KEY_CONFIRM, KEY_PRESS))
@@ -139,7 +167,9 @@ int main(void)
 				}
 				else if (UI_root.cursor == 3)
 				{
-					// 位置预留
+					UIpos = UI_test.Num;
+					UI_Reset_Cursor(&UI_root);
+					OLED_Clear();
 				}
 				else if (UI_root.cursor == 4)
 				{
@@ -174,6 +204,34 @@ int main(void)
 					{
 						Edit_Mode = 1;
 						UI_Show_Edit_Mode(Edit_Mode); 
+					}
+				}
+			}
+			else if (UIpos == UI_test.Num)
+			{
+				if (Edit_Mode == 1)
+				{
+					Edit_Mode = 0;
+					UI_Show_Edit_Mode(0);
+				}
+				else if (Edit_Mode == 0)
+				{
+					if (UI_test.cursor == 1)
+					{
+						// 切换监测的电机
+					}
+					else if (UI_test.cursor == 2)
+					{
+						Edit_Mode = 1;
+						UI_Show_Edit_Mode(Edit_Mode);
+					}
+					else if (UI_test.cursor == 3)
+					{
+						// 位置预留
+					}
+					else if (UI_test.cursor == 4)
+					{
+						// 位置预留
 					}
 				}
 			}
@@ -215,6 +273,20 @@ int main(void)
 					OLED_Clear();
 				}
 			}
+			else if (UIpos == UI_test.Num)
+			{
+				if (Edit_Mode == 1)
+				{
+					Edit_Mode = 0;
+					UI_Show_Edit_Mode(Edit_Mode);
+				}
+				else
+				{
+					UIpos = 0;
+					UI_Reset_Cursor(&UI_test);
+					OLED_Clear();
+				}
+			}
 
 		}
 	}
@@ -227,7 +299,8 @@ void TIM1_UP_IRQHandler(void)
 	if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET)
 	{
 		Key_Tick();
-
+		Encoder_Tick();
+		
 		TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
 	}
 }

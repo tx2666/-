@@ -19,9 +19,9 @@
 
 *PA8*
 
-*PA9*
+*PA9* **USART1_TX** 串口通信
 
-*PA10*
+*PA10* **USART1_RX** 串口通信
 
 *PA11*
 

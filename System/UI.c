@@ -18,6 +18,7 @@ typedef struct {
 UI_typedef UI_root;
 UI_typedef UI_start;
 UI_typedef UI_PID;
+UI_typedef UI_test;
 
 /**
  * @brief 获取UI结构体含有字符串的行数
@@ -56,7 +57,7 @@ void UI_Init(void)
     UI_root.exist_title = 0;
     strcpy(UI_root.line1, "Start");
     strcpy(UI_root.line2, "PID");
-    strcpy(UI_root.line3, "");
+    strcpy(UI_root.line3, "Test");
     strcpy(UI_root.line4, "");
     UI_root.default_cursor = 1;
     UI_root.cursor  = 1;
@@ -73,7 +74,7 @@ void UI_Init(void)
     UI_start.cursor0 = 2;
     UI_start.Num = 1;
     /* PID */
-    UI_start.exist_title = 1;
+    UI_PID.exist_title = 0;
     strcpy(UI_PID.line1, "PID");
     strcpy(UI_PID.line2, "Kp");
     strcpy(UI_PID.line3, "Ki");
@@ -82,6 +83,16 @@ void UI_Init(void)
     UI_PID.cursor  = 1;
     UI_PID.cursor0 = 1;
     UI_PID.Num = 2;
+    /* Test */
+    UI_test.exist_title = 0;
+    strcpy(UI_test.line1, "Test");
+    strcpy(UI_test.line2, "Taget");
+    strcpy(UI_test.line3, "Current");
+    strcpy(UI_test.line4, "Out");
+    UI_test.default_cursor = 1;
+    UI_test.cursor  = 1;
+    UI_test.cursor0 = 1;
+    UI_test.Num = 3;
 }
 
 /**
@@ -113,10 +124,14 @@ void UI_Show_PID(float Kp, float Ki, float Kd)
     OLED_ShowNum(4, start_pos+4, (int)(fabs((Kd-(int)Kd)*100)), 2);
 }
 
-
-void UI_Show_Motor_Num(uint8_t Motor_Num)
+void UI_PID_Show_Motor_Num(uint8_t Motor_Num)
 {
     OLED_ShowChar(1, 5, '0'+Motor_Num);
+}
+
+void UI_test_Show_Motor_Num(uint8_t Motor_Num)
+{
+    OLED_ShowChar(1, 6, '0'+Motor_Num);
 }
 
 /**
@@ -141,6 +156,7 @@ void UI_Reset_Cursor(UI_typedef *UI_Structure)
     UI_Structure->cursor0 = UI_Structure->cursor;
     UI_Structure->cursor = UI_Structure->default_cursor;
 }
+
 /**
  * @brief 向下移动光标
  * @param UI_Structure 界面文字信息的存储变量

@@ -16,6 +16,7 @@ typedef struct {
 extern UI_typedef UI_root;
 extern UI_typedef UI_start;
 extern UI_typedef UI_PID;
+extern UI_typedef UI_test;
 
 void UI_Init(void);
 void UI_Show_PID(float Kp, float Ki, float Kd);
@@ -25,6 +26,6 @@ void UI_Reset_Cursor(UI_typedef *UI_Structure);
 void UI_MoveDown_Cursor(UI_typedef *UI_Structure);
 void UI_MoveUp_Cursor(UI_typedef *UI_Structure);
 uint8_t UI_GetMaxLine(UI_typedef *UI_Structure);
-void UI_Show_Motor_Num(uint8_t Motor_Num);
+void UI_PID_Show_Motor_Num(uint8_t Motor_Num);
 
 #endif
