@@ -68,6 +68,7 @@ int main(void)
 		}
 		/* 按钮检测 */
 		/* 上 */
+		/* 单击 */
 		if (Key_GetState(KEY_UP, KEY_PRESS))
 		{
 			if 		(UIpos == UI_root.Num)
@@ -112,7 +113,44 @@ int main(void)
 				}
 			}
 		}
+		/* 长按 */
+		if (Key_GetState(KEY_UP, KEY_LONG))
+		{
+			if (UIpos == UI_root.Num)
+			{
+
+			}
+			else if (UIpos == UI_start.Num)
+			{
+
+			}
+			else if (UIpos == UI_PID.Num)
+			{
+
+			}
+			else if (UIpos == UI_test.Num)
+			{
+				if (Edit_Mode == 1)
+				{
+					if (UI_test.cursor == 2)
+					{
+						pPID_Motor->Target += 1;
+					}
+				}
+			}
+		}
+		/* 二连 */
+		if (Key_GetState(KEY_UP, KEY_DOUBLE))
+		{
+
+		}
+		/* 三连 */
+		if (Key_GetState(KEY_UP, KEY_TRINPLE))
+		{
+
+		}
 		/* 下 */
+		/* 单击 */
 		if (Key_GetState(KEY_DOWN, KEY_PRESS))
 		{
 			if 		(UIpos == UI_root.Num)
@@ -157,7 +195,44 @@ int main(void)
 				}
 			}
 		}
+		/* 长按 */
+		if (Key_GetState(KEY_DOWN, KEY_LONG))
+		{
+			if (UIpos == UI_root.Num)
+			{
+
+			}
+			else if (UIpos == UI_start.Num)
+			{
+
+			}
+			else if (UIpos == UI_PID.Num)
+			{
+
+			}
+			else if (UIpos == UI_test.Num)
+			{
+				if (Edit_Mode == 1)
+				{
+					if (UI_test.cursor == 2)
+					{
+						pPID_Motor->Target -= 1;
+					}
+				}
+			}
+		}
+		/* 二连 */
+		if (Key_GetState(KEY_DOWN, KEY_DOUBLE))
+		{
+
+		}
+		/* 三连 */
+		if (Key_GetState(KEY_DOWN, KEY_TRINPLE))
+		{
+			
+		}
 		/* 确定 */
+		/* 单击 */
 		if (Key_GetState(KEY_CONFIRM, KEY_PRESS))
 		{
 			if 		(UIpos == UI_root.Num)
@@ -253,6 +328,11 @@ int main(void)
 				}
 			}
 		}
+		/* 长按 */
+		if (Key_GetState(KEY_CONFIRM, KEY_LONG))
+		{
+
+		}
 		/* 取消 */
 		if (Key_GetState(KEY_CANCEL, KEY_PRESS))
 		{
@@ -317,7 +397,9 @@ void TIM1_UP_IRQHandler(void)
 	{
 		Key_Tick();
 		Encoder_Tick();
-		
+		PID_Motor1.Current = Encoder1_Count;
+		PID_Motor2.Current = Encoder2_Count;
+
 		TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
 	}
 }
