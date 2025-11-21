@@ -2,6 +2,7 @@
 #include "OLED.h"
 #include <string.h>
 #include <math.h>
+#include "PID.h"
 
 typedef struct {
     char line1[16];
@@ -86,8 +87,8 @@ void UI_Init(void)
     /* Test */
     UI_test.exist_title = 0;
     strcpy(UI_test.line1, "Test");
-    strcpy(UI_test.line2, "Taget");
-    strcpy(UI_test.line3, "Current");
+    strcpy(UI_test.line2, "Tar");
+    strcpy(UI_test.line3, "Cur");
     strcpy(UI_test.line4, "Out");
     UI_test.default_cursor = 1;
     UI_test.cursor  = 1;
@@ -124,11 +125,45 @@ void UI_Show_PID(float Kp, float Ki, float Kd)
     OLED_ShowNum(4, start_pos+4, (int)(fabs((Kd-(int)Kd)*100)), 2);
 }
 
+/**
+ * @brief test测试界面的数据展示
+ * @param Target 目标
+ * @param Current 当前
+ * @param Out 输出
+ * @retval 无
+ */
+void UI_Show_test(int Target, int Current, int Out)
+{
+    OLED_ShowSignedNum(2, 8, Target, 3);
+    OLED_ShowSignedNum(3, 8, Current, 3);
+    OLED_ShowSignedNum(4, 8, Out, 4);
+}
+
+/**
+ * @brief UI_Show_test的封装版
+ */
+void UI_Show_test_PID_Struct(PID_Data_Typedef *pPID_Data_Structure)
+{
+    UI_Show_test(pPID_Data_Structure->Target,
+                pPID_Data_Structure->Current,
+                pPID_Data_Structure->Out);
+}
+
+/**
+ * @brief PID参数调节界面，电机编号展示
+ * @param Motor_Num 电机编号
+ * @retval 无
+ */
 void UI_PID_Show_Motor_Num(uint8_t Motor_Num)
 {
     OLED_ShowChar(1, 5, '0'+Motor_Num);
 }
 
+/**
+ * @brief test界面，电机编号展示
+ * @param Motor_Num 电机编号
+ * @retval 无
+ */
 void UI_test_Show_Motor_Num(uint8_t Motor_Num)
 {
     OLED_ShowChar(1, 6, '0'+Motor_Num);

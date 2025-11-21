@@ -56,6 +56,15 @@ int main(void)
 		else if (UIpos == UI_test.Num)
 		{
 			UI_Show(&UI_test);
+			UI_Show_test_PID_Struct(pPID_Motor);
+			if (pPID_Motor == &PID_Motor1)
+			{
+				UI_test_Show_Motor_Num(1);
+			}
+			else if (pPID_Motor == &PID_Motor2)
+			{
+				UI_test_Show_Motor_Num(2);
+			}
 		}
 		/* 按钮检测 */
 		/* 上 */
@@ -95,7 +104,7 @@ int main(void)
 			{
 				if (Edit_Mode == 1)
 				{
-
+					pPID_Motor->Target += 1;
 				}
 				else if (Edit_Mode == 0)
 				{
@@ -140,7 +149,7 @@ int main(void)
 			{
 				if (Edit_Mode == 1)
 				{
-
+					pPID_Motor->Target -= 1;
 				}
 				else if (Edit_Mode == 0)
 				{
@@ -219,6 +228,14 @@ int main(void)
 					if (UI_test.cursor == 1)
 					{
 						// 切换监测的电机
+						if (pPID_Motor == &PID_Motor1)
+						{
+							pPID_Motor = &PID_Motor2;
+						}
+						else if (pPID_Motor == &PID_Motor2)
+						{
+							pPID_Motor = &PID_Motor1;
+						}
 					}
 					else if (UI_test.cursor == 2)
 					{
