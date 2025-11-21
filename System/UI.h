@@ -25,5 +25,6 @@ void UI_Reset_Cursor(UI_typedef *UI_Structure);
 void UI_MoveDown_Cursor(UI_typedef *UI_Structure);
 void UI_MoveUp_Cursor(UI_typedef *UI_Structure);
 uint8_t UI_GetMaxLine(UI_typedef *UI_Structure);
+void UI_Show_Motor_Num(uint8_t Motor_Num);
 
 #endif

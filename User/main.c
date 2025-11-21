@@ -42,6 +42,14 @@ int main(void)
 		{
 			UI_Show(&UI_PID);
 			UI_Show_PID(pPID_Motor->Kp, pPID_Motor->Ki, pPID_Motor->Kd);
+			if (pPID_Motor == &PID_Motor1)
+			{
+				UI_Show_Motor_Num(1);
+			}
+			else if (pPID_Motor == &PID_Motor2)
+			{
+				UI_Show_Motor_Num(2);
+			}
 		}
 		/* 按钮检测 */
 		/* 上 */

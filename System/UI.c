@@ -113,6 +113,12 @@ void UI_Show_PID(float Kp, float Ki, float Kd)
     OLED_ShowNum(4, start_pos+4, (int)(fabs((Kd-(int)Kd)*100)), 2);
 }
 
+
+void UI_Show_Motor_Num(uint8_t Motor_Num)
+{
+    OLED_ShowChar(1, 5, '0'+Motor_Num);
+}
+
 /**
  * @brief 显示编辑模式是否启用
  * @param Mode 1时显示Edit，0时清空Edit字符串
