@@ -13,13 +13,20 @@ typedef struct {
 	float I;				// 积分项结果
 	float D;				// 微分项结果
 	float Out;				// 输出
-	float PrevError;		// 上次误差
-	float PrevPrevError;	// 上上次误差
-	float CurrError;		// 当前误差
+	float Error1;			// 上次误差
+	float Error2;			// 上上次误差
+	float Error0;			// 当前误差
 	float SumError;			// 误差积分
 	uint16_t Count1;
 	uint16_t Count2;
-} PID_Typedef;
+} PID_Data_Typedef;
+
+typedef struct
+{
+	uint8_t Motor_Num;
+	PID_Mode Mode;
+	PID_Data_Typedef PID_Data_Structure;
+} PID_Tick_Typedef;
 
 typedef enum {
 	POSTION = 0,
@@ -27,8 +34,9 @@ typedef enum {
 } PID_Mode;
 
 /* 函数部分 */
-void PID_TypedefStructInit(PID_Typedef *PID_Struct);							// 结构体初始化赋值
-void PID_Motor_Control(uint8_t Motor_Num, PID_Typedef *pid, PID_Mode Mode);
-void PID_TypedefStructReset(PID_Typedef *PID_Struct);							// 除参数外全部清零
+void PID_TypedefStructInit(PID_Data_Typedef *PID_Struct);							// 结构体初始化赋值
+void PID_Motor_Control(uint8_t Motor_Num, PID_Data_Typedef *pid, PID_Mode Mode);
+void PID_TypedefStructReset(PID_Data_Typedef *PID_Struct);							// 除参数外全部清零
+void PID_Tick(PID_Tick_Typedef *PID_Tick_Structure);
 
 #endif
