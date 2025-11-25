@@ -19,6 +19,7 @@ extern UI_typedef UI_PID;
 extern UI_typedef UI_test;
 extern UI_typedef UI_target;
 extern UI_typedef UI_sensor;
+extern UI_typedef UI_serial;
 
 
 void UI_Init(void);
@@ -34,6 +35,7 @@ void UI_Show_test(int Target1, int Target2);
 void UI_Show_test_PID_Struct(PID_Data_Typedef *pPID_Data_Structure1, PID_Data_Typedef *pPID_Data_Structure2, int Step);
 void UI_test_Show_Motor_Num(uint8_t Motor_Num);
 void UI_Show_Sensor(uint8_t SensorData[5]);
+void UI_Show_Serial(uint8_t Serial_Mode);
 
 
 #endif

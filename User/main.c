@@ -95,6 +95,11 @@ int main(void)
 			UI_Show(&UI_sensor);
 			UI_Show_Sensor(Sensor_Data_Bit);
 		}
+		else if (UIpos == UI_serial.Num)
+		{
+			UI_Show(&UI_serial);
+			UI_Show_Serial(Serial_Out_Mode);
+		}
 		/* 按钮检测 */
 		/* 上 */
 		/* 单击 */
@@ -162,6 +167,14 @@ int main(void)
 				{
 					UI_MoveUp_Cursor(&UI_target);
 				}
+			}
+			else if (UIpos == UI_sensor.Num)
+			{
+
+			}
+			else if (UIpos == UI_serial.Num)
+			{
+				UI_MoveUp_Cursor(&UI_serial);
 			}
 		}
 		/* 长按 */
@@ -302,6 +315,10 @@ int main(void)
 					UI_MoveDown_Cursor(&UI_target);
 				}
 			}
+			else if (UIpos == UI_serial.Num)
+			{
+				UI_MoveDown_Cursor(&UI_serial);
+			}
 		}
 		/* 长按 */
 		if (Key_GetState(KEY_DOWN, KEY_LONG))
@@ -439,7 +456,9 @@ int main(void)
 				}
 				else if (UI_test.cursor == 4)
 				{
-					// 位置预留
+					UIpos = UI_serial.Num;
+					UI_Reset_Cursor(&UI_test);
+					OLED_Clear();
 				}
 			}
 			else if (UIpos == UI_target.Num)
@@ -471,6 +490,25 @@ int main(void)
 			else if (UIpos == UI_sensor.Num)
 			{
 				// 没有什么可以按确定的，只能退出
+			}
+			else if (UIpos == UI_serial.Num)
+			{
+				if (UI_serial.cursor == 1)
+				{
+					Serial_Out_Mode = SERIAL_OUT_MODE_MOTOR_DATA;
+				}
+				else if (UI_serial.cursor == 2)
+				{
+					Serial_Out_Mode = SERIAL_OUT_MODE_SENSOR_DATA;
+				}
+				else if (UI_serial.cursor == 3)
+				{
+					// 位置预留
+				}
+				else if (UI_serial.cursor == 4)
+				{
+					// 位置预留
+				}
 			}
 		}
 		/* 长按 */
@@ -539,6 +577,12 @@ int main(void)
 			{
 				UIpos = UI_test.Num;
 				UI_Reset_Cursor(&UI_sensor);
+				OLED_Clear();
+			}
+			else if (UIpos == UI_serial.Num)
+			{
+				UIpos = UI_test.Num;
+				UI_Reset_Cursor(&UI_serial);
 				OLED_Clear();
 			}
 		}

@@ -22,6 +22,7 @@ UI_typedef UI_PID;
 UI_typedef UI_test;
 UI_typedef UI_target;
 UI_typedef UI_sensor;
+UI_typedef UI_serial;
 
 /**
  * @brief 获取UI结构体含有字符串的行数
@@ -91,7 +92,7 @@ void UI_Init(void)
     strcpy(UI_test.line1, "Test");
     strcpy(UI_test.line2, "Target");
     strcpy(UI_test.line3, "Sensor");
-    strcpy(UI_test.line4, "");
+    strcpy(UI_test.line4, "Serial");
     UI_test.default_cursor = 1;
     UI_test.cursor  = 1;
     UI_test.cursor0 = 1;
@@ -116,6 +117,28 @@ void UI_Init(void)
     UI_sensor.cursor  = 1;
     UI_sensor.cursor0 = 1;
     UI_sensor.Num = 5;
+    /* Serial 6 */
+    UI_serial.exist_title = 0;
+    strcpy(UI_serial.line1, "Motor");
+    strcpy(UI_serial.line2, "Sensor");
+    strcpy(UI_serial.line3, "");
+    strcpy(UI_serial.line4, "");
+    UI_serial.default_cursor = 1;
+    UI_serial.cursor  = 1;
+    UI_serial.cursor0 = 1;
+    UI_serial.Num = 6;
+}
+
+/**
+ * @brief 显示哪个数据正在输出
+ * @retval 无
+ */
+void UI_Show_Serial(uint8_t Serial_Mode)
+{
+    OLED_ShowChar(1, 16, Serial_Mode==1?'<':' ');
+    OLED_ShowChar(2, 16, Serial_Mode==2?'<':' ');
+    OLED_ShowChar(3, 16, Serial_Mode==3?'<':' ');
+    OLED_ShowChar(4, 16, Serial_Mode==4?'<':' ');
 }
 
 /**
@@ -269,6 +292,7 @@ void UI_MoveUp_Cursor(UI_typedef *UI_Structure)
         }
     }
 }
+
 /**
   * @brief 刷新页面
   * @param UI_Structure 界面文字信息的存储变量
