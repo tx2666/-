@@ -30,12 +30,12 @@ int16_t Tar_Step = 1;
 
 int main(void)
 {
+	Sensor_Init();
 	Key_Init();
 	Timer_Init();
 	Encoder_Init();
 	Motor_Init();
 	Serial_Init();
-	Sensor_Init();
 	UI_Init();
 	PID_TypedefStructInit(&PID_Motor1);
 	PID_Tick_Motor1.Mode = ADDITION;
@@ -517,17 +517,9 @@ int main(void)
 			}
 			else if (UIpos == UI_test.Num)
 			{
-				if (Edit_Mode == 1)
-				{
-					Edit_Mode = 0;
-					UI_Show_Edit_Mode(Edit_Mode);
-				}
-				else
-				{
-					UIpos = 0;
-					UI_Reset_Cursor(&UI_test);
-					OLED_Clear();
-				}
+				UIpos = UI_root.Num;
+				UI_Reset_Cursor(&UI_test);
+				OLED_Clear();
 			}
 			else if (UIpos == UI_target.Num)
 			{
