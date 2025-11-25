@@ -11,6 +11,10 @@
 #include "UI.h"
 #include "Sensor.h"
 
+#define SERIAL_OUT_MODE_NONE			((uint8_t)0)
+#define SERIAL_OUT_MODE_MOTOR_DATA		((uint8_t)1)
+#define SERIAL_OUT_MODE_SENSOR_DATA		((uint8_t)2)
+
 PID_Data_Typedef PID_Motor1;
 PID_Data_Typedef PID_Motor2;
 PID_Data_Typedef *pPID_Motor;
@@ -20,6 +24,7 @@ PID_Tick_Typedef PID_Tick_Motor2;
 
 uint8_t UIpos = 0;
 uint8_t Edit_Mode = 0;
+uint8_t Serial_Out_Mode = SERIAL_OUT_MODE_MOTOR_DATA;
 
 int16_t Tar_Step = 1;
 
@@ -30,6 +35,7 @@ int main(void)
 	Encoder_Init();
 	Motor_Init();
 	Serial_Init();
+	Sensor_Init();
 	UI_Init();
 	PID_TypedefStructInit(&PID_Motor1);
 	PID_Tick_Motor1.Mode = ADDITION;
@@ -558,8 +564,17 @@ void TIM1_UP_IRQHandler(void)
 		count ++;
 		if (count >= 20)
 			{
-				Serial_Printf("Data:%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\r\n",
-					PID_Motor2.Target, PID_Motor2.Current, PID_Motor2.P, PID_Motor2.I, PID_Motor2.D, PID_Motor2.Out);
+				if (Serial_Out_Mode == SERIAL_OUT_MODE_MOTOR_DATA)
+				{
+					Serial_Printf("Data:%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\r\n",
+						PID_Motor2.Target, PID_Motor2.Current, PID_Motor2.P, PID_Motor2.I, PID_Motor2.D, PID_Motor2.Out);
+				}
+				else if (Serial_Out_Mode == SERIAL_OUT_MODE_SENSOR_DATA)
+				{
+					Serial_Printf("Sensor:%d, %d, %d, %d, %d\r\n", 
+						Sensor1_GetState(), Sensor2_GetState(), Sensor3_GetState(), Sensor4_GetState(), Sensor5_GetState());
+				}
+
 				count = 0;
 			}
 		TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
