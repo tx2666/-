@@ -23,6 +23,7 @@ UI_typedef UI_test;
 UI_typedef UI_target;
 UI_typedef UI_sensor;
 UI_typedef UI_serial;
+UI_typedef UI_go;
 
 /**
  * @brief 获取UI结构体含有字符串的行数
@@ -127,6 +128,16 @@ void UI_Init(void)
     UI_serial.cursor  = 1;
     UI_serial.cursor0 = 1;
     UI_serial.Num = 6;
+    /* Go 7 */
+    UI_go.exist_title = 0;
+    strcpy(UI_go.line1, "Mode");
+    strcpy(UI_go.line2, "Speed");
+    strcpy(UI_go.line3, "Sensor");
+    strcpy(UI_go.line4, "");
+    UI_go.default_cursor = 1;
+    UI_go.cursor  = 1;
+    UI_go.cursor0 = 1;
+    UI_go.Num = 7;
 }
 
 /**

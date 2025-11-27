@@ -20,6 +20,7 @@ extern UI_typedef UI_test;
 extern UI_typedef UI_target;
 extern UI_typedef UI_sensor;
 extern UI_typedef UI_serial;
+extern UI_typedef UI_go;
 
 
 void UI_Init(void);

@@ -17,6 +17,7 @@
 
 PID_Data_Typedef PID_Motor1;
 PID_Data_Typedef PID_Motor2;
+PID_Data_Typedef PID_Sensor;
 PID_Data_Typedef *pPID_Motor;
 
 PID_Tick_Typedef PID_Tick_Motor1;
@@ -48,6 +49,7 @@ int main(void)
 	PID_Tick_Motor2.Mode = ADDITION;
 	PID_Tick_Motor2.Motor_Num = 2;
 	PID_Tick_Motor2.pPID_Data_Structure = &PID_Motor2;
+	PID_TypedefStructInit(&PID_Sensor);
 
 
 	UIpos = UI_root.Num;
@@ -110,6 +112,10 @@ void UI_Exhibit(void)
 		UI_Show(&UI_serial);
 		UI_Show_Serial(Serial_Out_Mode);
 	}	
+	else if (UIpos == UI_go.Num)
+	{
+		UI_Show(&UI_go);
+	}
 }
 
 void Key_Monitor(void)
@@ -437,7 +443,12 @@ void Key_Monitor(void)
 		}
 		else if (UIpos == UI_start.Num)
 		{
-			
+			if (UI_start.cursor == 2)
+			{
+				UIpos = UI_go.Num;
+				UI_Reset_Cursor(&UI_start);
+				OLED_Clear();
+			}
 		}
 		else if (UIpos == UI_PID.Num)
 		{
@@ -545,6 +556,7 @@ void Key_Monitor(void)
 
 	}
 	/* 取消 */
+	/* 单击 */
 	if (Key_GetState(KEY_CANCEL, KEY_PRESS))
 	{
 		if 		(UIpos == UI_root.Num)
@@ -613,6 +625,24 @@ void Key_Monitor(void)
 			UI_Reset_Cursor(&UI_serial);
 			OLED_Clear();
 		}
+		else if (UIpos == UI_go.Num)
+		{
+			
+		}
+	}
+	/* 长按 */
+	if (Key_GetState(KEY_CANCEL, KEY_LONG))
+	{
+		if (UIpos == UI_go.Num)
+		{
+			UIpos = UI_root.Num;
+			UI_Reset_Cursor(&UI_go);
+			OLED_Clear();
+
+			PID_TypedefStructReset(&PID_Motor1);
+			PID_TypedefStructReset(&PID_Motor2);
+			PID_TypedefStructReset(&PID_Sensor);
+		}
 	}
 }
 
@@ -631,21 +661,25 @@ void TIM1_UP_IRQHandler(void)
 		PID_Tick(&PID_Tick_Motor1);
 		PID_Tick(&PID_Tick_Motor2);
 		count ++;
+		if (count%10 == 0)
+		{
+			
+		}
 		if (count >= 20)
+		{
+			if (Serial_Out_Mode == SERIAL_OUT_MODE_MOTOR_DATA)
 			{
-				if (Serial_Out_Mode == SERIAL_OUT_MODE_MOTOR_DATA)
-				{
-					Serial_Printf("Data:%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\r\n",
-						PID_Motor2.Target, PID_Motor2.Current, PID_Motor2.P, PID_Motor2.I, PID_Motor2.D, PID_Motor2.Out);
-				}
-				else if (Serial_Out_Mode == SERIAL_OUT_MODE_SENSOR_DATA)
-				{
-					Serial_Printf("Sensor:%d, %d, %d, %d, %d\r\n", 
-						Sensor_Data_Bit[0], Sensor_Data_Bit[1], Sensor_Data_Bit[2], Sensor_Data_Bit[3], Sensor_Data_Bit[4]);
-				}
-
-				count = 0;
+				Serial_Printf("Data:%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\r\n",
+					PID_Motor2.Target, PID_Motor2.Current, PID_Motor2.P, PID_Motor2.I, PID_Motor2.D, PID_Motor2.Out);
 			}
+			else if (Serial_Out_Mode == SERIAL_OUT_MODE_SENSOR_DATA)
+			{
+				Serial_Printf("Sensor:%d, %d, %d, %d, %d\r\n", 
+					Sensor_Data_Bit[0], Sensor_Data_Bit[1], Sensor_Data_Bit[2], Sensor_Data_Bit[3], Sensor_Data_Bit[4]);
+			}
+
+			count = 0;
+		}
 		TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
 	}
 }
