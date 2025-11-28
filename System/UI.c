@@ -131,13 +131,23 @@ void UI_Init(void)
     /* Go 7 */
     UI_go.exist_title = 0;
     strcpy(UI_go.line1, "Mode");
-    strcpy(UI_go.line2, "Speed");
+    strcpy(UI_go.line2, "Tar");
     strcpy(UI_go.line3, "Sensor");
     strcpy(UI_go.line4, "");
     UI_go.default_cursor = 1;
     UI_go.cursor  = 1;
     UI_go.cursor0 = 1;
     UI_go.Num = 7;
+}
+
+/**
+ * @brief
+ * @param
+ */
+void UI_Show_Start(int Target1, int Target2)
+{
+    OLED_ShowSignedNum(2, 4, Target1, 3);
+    OLED_ShowSignedNum(2, 8, Target2, 3);
 }
 
 /**
