@@ -2,6 +2,7 @@
 #include "Motor.h"
 #include "Serial.h"
 #include <math.h>
+#include "Sensor.h"
 
 #define MAX_OUT ((float)1000)
 
@@ -92,6 +93,91 @@ void PID_Motor_Control(uint8_t Motor_Num, PID_Data_Typedef *pData, PID_Mode Mode
 	/* 输出限幅 */
 	if (pData->Out >= MAX_OUT) pData->Out = MAX_OUT;
 	else if (pData->Out <= -MAX_OUT) pData->Out = -MAX_OUT;
+}
+
+/**
+ * @brief 偏离误差计算
+ * @param pData 存储PID参数等相关数据的结构体地址
+ * @retval 无
+ */
+void PID_Sensor_Error_Caculate(PID_Data_Typedef *pData)
+{
+	float Severe = 5;
+	float Light = 2;
+	float Err = 0;
+	if (Sensor_Data_Bit[0])
+	{
+		Err -= Severe;
+	}
+	if (Sensor_Data_Bit[1])
+	{
+		Err -= Light;
+	}
+	if (Sensor_Data_Bit[2])
+	{
+		Err += 0;
+	}
+	if (Sensor_Data_Bit[3])
+	{
+		Err += Light;
+	}
+	if (Sensor_Data_Bit[4])
+	{
+		Err += Severe;
+	}
+	pData->Error0 = Err;
+}
+
+/**
+ * @brief 对传感器使用的PID调控算法
+ * @param pData 存储PID参数等相关数据的结构体地址
+ * @param Mode PID模式，POSTION，ADDITION
+ * @retval 无
+ */
+void PID_Sensor_Caculate(PID_Data_Typedef *pData, PID_Mode Mode)
+{
+	/* 变量传递 */ 
+	pData->Error2 = pData->Error1;
+	pData->Error1 = pData->Error0;
+	/* 误差计算 */
+	PID_Sensor_Error_Caculate(pData);
+
+	float kp = pData->Kp;
+	float ki = pData->Ki;
+	float kd = pData->Kd;
+
+	float Out_P = 0;
+	float Out_I = 0;
+	float Out_D = 0;
+	
+	if (Mode == POSTION)
+	{
+		// 位置式PID
+
+	}
+	else if (Mode == ADDITION)
+	{
+		// 增量式PID
+		// P
+		Out_P = kp * (pData->Error0 - pData->Error1);
+		// I
+		Out_I = ki * pData->Error0;
+		// D
+		Out_D = kd * ((pData->Error0 - pData->Error1) - (pData->Error1 - pData->Error2));
+		// Out
+		pData->Out += Out_P + Out_I + Out_D;
+	}
+
+
+	// 输出限幅
+	if (pData->Out >= 600)
+	{
+		pData->Out = 600;
+	}
+	else if (pData->Out <= -600)
+	{
+		pData->Out = -600;
+	}
 }
 
 void PID_TypedefStructInit(PID_Data_Typedef *PID_Struct)

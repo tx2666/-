@@ -34,9 +34,13 @@ typedef struct
 } PID_Tick_Typedef;
 
 /* 函数部分 */
-void PID_TypedefStructInit(PID_Data_Typedef *PID_Struct);							// 结构体初始化赋值
 void PID_Motor_Control(uint8_t Motor_Num, PID_Data_Typedef *pid, PID_Mode Mode);
-void PID_TypedefStructReset(PID_Data_Typedef *PID_Struct);							// 除参数外全部清零
+void PID_Sensor(PID_Data_Typedef *pData, PID_Mode Mode);
 void PID_Tick(PID_Tick_Typedef *PID_Tick_Structure);
+void PID_TypedefStructInit(PID_Data_Typedef *PID_Struct);							// 结构体初始化赋值
+void PID_TypedefStructReset(PID_Data_Typedef *PID_Struct);							// 除参数外全部清零
+void PID_Sensor_Caculate(PID_Data_Typedef *pData, PID_Mode Mode);
+
+void PID_Sensor_Error_Caculate(PID_Data_Typedef *pData);
 
 #endif
