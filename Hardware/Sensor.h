@@ -12,6 +12,7 @@ uint8_t Sensor3_GetState(void);
 uint8_t Sensor4_GetState(void);
 uint8_t Sensor5_GetState(void);
 uint8_t Sensor_GetState(uint8_t Sensor_id);
+void Sensor_Denoising(uint8_t *Sensor_Data);
 void Sensor_Tick(void);
 
 

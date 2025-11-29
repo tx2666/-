@@ -108,6 +108,46 @@ uint8_t Sensor_GetState(uint8_t Sensor_id)
 }
 
 /**
+ * @brief 数据降噪
+ * @param Sensor_Data 传感器数据数组的地址
+ * @retval 无
+ */
+void Sensor_Denoising(uint8_t *Sensor_Data)
+{
+    int maxcount = 0;
+    int count = 0;
+    int start = -1;
+    for (int i = 0; i < 5; i++)
+    {
+        if (Sensor_Data[i] ==  1)
+        {
+            count++;
+        }
+        else 
+        {
+            if (count > maxcount)
+            {
+                maxcount = count;
+                start = i - count;
+                count = 0;
+            }
+        }
+    }
+
+    if (start == -1)
+    {
+        return;
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        if (i >= start && i < start + maxcount)
+        {
+            Sensor_Data[i] = 1;
+        }
+    }
+}
+
+/**
  * @brief 固定时间更新一次传感器数据
  * @retval 无
  */
