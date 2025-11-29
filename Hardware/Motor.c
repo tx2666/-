@@ -1,7 +1,7 @@
 #include "stm32f10x.h"                  // Device header
 #include "PWM.h"
 
-uint16_t Target_Speed = 60;
+uint16_t Target_Speed = 230;
 
 void Motor_Init(void)
 {

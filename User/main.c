@@ -28,7 +28,7 @@ uint8_t Edit_Mode = 0;
 uint8_t Serial_Out_Mode = SERIAL_OUT_MODE_MOTOR_DATA;
 uint8_t start_flag = 0;
 
-int16_t Tar_Step = 1;
+int16_t Tar_Step = 60;
 
 void UI_Exhibit(void);
 void Key_Monitor(void);
@@ -461,8 +461,8 @@ void Key_Monitor(void)
 				UI_Reset_Cursor(&UI_start);
 				OLED_Clear();
 				start_flag = 1;
-				PID_Motor1.Target = 20;
-				PID_Motor2.Target = 20;
+				PID_Motor1.Target = Target_Speed;
+				PID_Motor2.Target = Target_Speed;
 			}
 		}
 		else if (UIpos == UI_PID.Num)
@@ -667,6 +667,8 @@ void TIM1_UP_IRQHandler(void)
 {
 	static uint16_t count = 0;
 	static uint16_t count2 = 0;
+	static uint16_t count_untrack = 0;
+
 	if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET)
 	{
 		Key_Tick();
@@ -675,8 +677,6 @@ void TIM1_UP_IRQHandler(void)
 		PID_Motor1.Current = -Encoder1_Count;
 		PID_Motor2.Current = -Encoder2_Count;
 
-		PID_Tick(&PID_Tick_Motor1);
-		PID_Tick(&PID_Tick_Motor2);
 		count ++;
 		count2 ++;
 		if (count2 >= 50)
@@ -684,7 +684,7 @@ void TIM1_UP_IRQHandler(void)
 			if (start_flag == 1)
 			{
 				PID_Sensor_Caculate(&PID_Sensor_Data, ADDITION);
-
+				
 				if (PID_Sensor_Data.Out > 0)
 				{
 					PID_Motor2.Target = Target_Speed - PID_Sensor_Data.Out + 5;
@@ -693,24 +693,42 @@ void TIM1_UP_IRQHandler(void)
 				{
 					PID_Motor1.Target = Target_Speed + PID_Sensor_Data.Out + 5;
 				}
-
+				
 				if (Sensor_Data_Bit[2] == 1)
 				{
 					if (PID_Motor2.Target <= Target_Speed)
 					{
-						PID_Motor2.Target += 2;
+						PID_Motor2.Target += 4;
 					}
-
+					
 					if (PID_Motor1.Target <= Target_Speed)
 					{
-						PID_Motor1.Target += 2;
+						PID_Motor1.Target += 4;
 					}
 				}
+				uint8_t count_Signal = 0;
+				for (int i = 0; i < 5; i++)
+				{
+					count_Signal += Sensor_Data_Bit[i];
+				}
 
+				if (count_Signal == 0)
+				{
+					count_untrack ++;
+					if (count_untrack >= 2)
+					{
+						// 倒车
+						PID_Motor1.Target = -0.5 * Target_Speed;
+						PID_Motor2.Target = -0.5 * Target_Speed;
+					}
+				}
+				
 			}
 			count2 = 0;
 		}
-		if (count >= 20)
+		PID_Tick(&PID_Tick_Motor1);
+		PID_Tick(&PID_Tick_Motor2);
+		if (count >= 10)
 		{
 			if (Serial_Out_Mode == SERIAL_OUT_MODE_MOTOR_DATA)
 			{

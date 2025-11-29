@@ -103,7 +103,7 @@ void PID_Motor_Control(uint8_t Motor_Num, PID_Data_Typedef *pData, PID_Mode Mode
 void PID_Sensor_Error_Caculate(PID_Data_Typedef *pData)
 {
 	float Severe = 3;
-	float Light = 1;
+	float Light = 0.5;
 	float Err = 0;
 	if (Sensor_Data_Bit[0])
 	{
@@ -172,20 +172,20 @@ void PID_Sensor_Caculate(PID_Data_Typedef *pData, PID_Mode Mode)
 	// 输出限幅
 	if (pData->Out >= Target_Speed)
 	{
-		pData->Out = Target_Speed;
+		pData->Out = (Target_Speed + 80);
 	}
 	else if (pData->Out <= -Target_Speed)
 	{
-		pData->Out = -Target_Speed;
+		pData->Out = -(Target_Speed + 80);
 	}
 }
 
 void PID_TypedefStructInit(PID_Data_Typedef *PID_Struct)
 {
 	PID_Struct->Magnification = 1;
-	PID_Struct->Kp = 1;
-	PID_Struct->Ki = 2;
-	PID_Struct->Kd = -0.1;
+	PID_Struct->Kp = 1.0;
+	PID_Struct->Ki = 0.9;
+	PID_Struct->Kd = -0.2;
 	PID_Struct->Current = 0;
 	PID_Struct->Target = 0;
 	PID_Struct->P = 0;
