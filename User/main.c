@@ -52,7 +52,7 @@ int main(void)
 	PID_Tick_Motor2.pPID_Data_Structure = &PID_Motor2;
 	PID_TypedefStructInit(&PID_Sensor_Data);
 	PID_Sensor_Data.Kp = 1;
-	PID_Sensor_Data.Ki = 20;
+	PID_Sensor_Data.Ki = 25;
 	PID_Sensor_Data.Kd = -0.5;
 
 
@@ -120,6 +120,7 @@ void UI_Exhibit(void)
 	{
 		UI_Show(&UI_go);
 		UI_Show_Start(PID_Motor1.Target, PID_Motor2.Target);
+		UI_Show_Sensor(Sensor_Data_Bit);
 		OLED_ShowChar(1, 7, 'D');
 		if (PID_Sensor_Data.Out > 0)
 		{
@@ -681,7 +682,7 @@ void TIM1_UP_IRQHandler(void)
 
 		count ++;
 		count2 ++;
-		if (count2 >= 50)
+		if (count2 >= 10)
 		{
 			if (start_flag == 1)
 			{
@@ -696,37 +697,40 @@ void TIM1_UP_IRQHandler(void)
 				if (count_Signal == 0)
 				{
 					count_untrack ++;
-					if (count_untrack >= 2)
+					if (count_untrack >= 1)
 					{
 						// 倒车
-						PID_Motor1.Target = -0.5 * Target_Speed;
-						PID_Motor2.Target = -0.5 * Target_Speed;
+						PID_Motor1.Target = -0.3 * Target_Speed;
+						PID_Motor2.Target = -0.3 * Target_Speed;
 						count_untrack = 0;
 					}
 				}
 				else
 				{
+					// 由于车辆设计缺陷，转弯时需要另一个轮子倒转，否则只会原地打滑
 					if (PID_Sensor_Data.Out > 0)
 					{
 						PID_Motor2.Target = Target_Speed - PID_Sensor_Data.Out;
 						PID_Motor1.Target = Target_Speed;
 					}
-					else if (PID_Sensor_Data.Out < 0)
+					if (PID_Sensor_Data.Out < 0)
 					{
-						PID_Motor1.Target = Target_Speed + PID_Sensor_Data.Out;
+						PID_Motor1.Target = Target_Speed - (-PID_Sensor_Data.Out);
 						PID_Motor2.Target = Target_Speed;
 					}
-					// if (Sensor_Data_Bit[2] == 1)
-					// {
-					// 	if (PID_Motor2.Target <= Target_Speed)
-					// 	{
-					// 		PID_Motor2.Target += 4;
-					// 	}
-					// 	if (PID_Motor1.Target <= Target_Speed)
-					// 	{
-					// 		PID_Motor1.Target += 4;
-					// 	}
-					// }
+					// 如果中间的传感器位于黑线上，那么加 速度
+					if (Sensor_Data_Bit[2] == 1)
+					{
+						PID_TypedefStructReset(&PID_Sensor_Data);
+						// if (PID_Motor2.Target <= Target_Speed)
+						// {
+						// 	PID_Motor2.Target += 4;
+						// }
+						// if (PID_Motor1.Target <= Target_Speed)
+						// {
+						// 	PID_Motor1.Target += 4;
+						// }
+					}
 				}
 				
 			}
@@ -740,7 +744,9 @@ void TIM1_UP_IRQHandler(void)
 			if (Serial_Out_Mode == SERIAL_OUT_MODE_MOTOR_DATA)
 			{
 				Serial_Printf("Data:%.2f, %.2f, %.2f, %.2f, %.2f, %.2f\r\n",
-					PID_Motor2.Target, PID_Motor2.Current, PID_Motor2.P, PID_Motor2.I, PID_Motor2.D, PID_Motor2.Out);
+					PID_Sensor_Data.Target, PID_Sensor_Data.Current, 
+					PID_Sensor_Data.Error0, PID_Sensor_Data.I, PID_Sensor_Data.D, 
+					PID_Sensor_Data.Out);
 			}
 			else if (Serial_Out_Mode == SERIAL_OUT_MODE_SENSOR_DATA)
 			{

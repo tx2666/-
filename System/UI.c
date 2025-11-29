@@ -132,7 +132,7 @@ void UI_Init(void)
     UI_go.exist_title = 0;
     strcpy(UI_go.line1, "Mode");
     strcpy(UI_go.line2, "Tar");
-    strcpy(UI_go.line3, "Sensor");
+    strcpy(UI_go.line3, "");
     strcpy(UI_go.line4, "");
     UI_go.default_cursor = 1;
     UI_go.cursor  = 1;

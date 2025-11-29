@@ -102,9 +102,10 @@ void PID_Motor_Control(uint8_t Motor_Num, PID_Data_Typedef *pData, PID_Mode Mode
  */
 void PID_Sensor_Error_Caculate(PID_Data_Typedef *pData)
 {
-	float Severe = 3;
+	float Severe = 3.0;
 	float Light = 0.5;
 	float Err = 0;
+	// 黑色的输出为0，白色输出为1
 	if (Sensor_Data_Bit[0] == 1)
 	{
 		Err -= Severe;
@@ -125,6 +126,7 @@ void PID_Sensor_Error_Caculate(PID_Data_Typedef *pData)
 	{
 		Err += Severe;
 	}
+	// 赋值
 	pData->Error0 = Err;
 }
 
@@ -163,11 +165,11 @@ void PID_Sensor_Caculate(PID_Data_Typedef *pData, PID_Mode Mode)
 		// I
 		Out_I = ki * pData->Error0;
 		// 积分限幅
-		if (Out_I > 50)
+		if (Out_I >= 50)
 		{
 			Out_I = 50;
 		}
-		else if (Out_I < -50)
+		else if (Out_I <= -50)
 		{
 			Out_I = -50;
 		}
@@ -177,15 +179,18 @@ void PID_Sensor_Caculate(PID_Data_Typedef *pData, PID_Mode Mode)
 		pData->Out += Out_P + Out_I + Out_D;
 	}
 
+	pData->P = Out_P;
+	pData->I = Out_I;
+	pData->D = Out_D;
 
 	// 输出限幅
-	if (pData->Out >= Target_Speed)
+	if (pData->Out >= (Target_Speed + 90.0))
 	{
-		pData->Out = (Target_Speed + 160);
+		pData->Out = (Target_Speed + 90.0);
 	}
-	else if (pData->Out <= -Target_Speed)
+	else if (pData->Out <= -(Target_Speed + 90.0))
 	{
-		pData->Out = -(Target_Speed + 160);
+		pData->Out = -(Target_Speed + 90.0);
 	}
 }
 
@@ -212,7 +217,7 @@ void PID_TypedefStructInit(PID_Data_Typedef *PID_Struct)
 void PID_TypedefStructReset(PID_Data_Typedef *PID_Struct)
 {
 	PID_Struct->Current = 0;
-	// PID_Struct->Target = 0;
+	PID_Struct->Target = 0;
 	PID_Struct->P = 0;
 	PID_Struct->I = 0;
 	PID_Struct->D = 0;

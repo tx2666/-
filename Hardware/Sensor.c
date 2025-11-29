@@ -174,7 +174,6 @@ void Sensor_Tick(void)
         Sensor_Data_Bit[2] = Sensor3_GetState();
         Sensor_Data_Bit[3] = Sensor4_GetState();
         Sensor_Data_Bit[4] = Sensor5_GetState();
-        Sensor_Denoising(Sensor_Data_Bit);
 
         count = 0;
     }
