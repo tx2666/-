@@ -687,25 +687,27 @@ void TIM1_UP_IRQHandler(void)
 				
 				if (PID_Sensor_Data.Out > 0)
 				{
-					PID_Motor2.Target = Target_Speed - PID_Sensor_Data.Out + 5;
+					PID_Motor2.Target = Target_Speed - PID_Sensor_Data.Out;
+					PID_Motor1.Target = Target_Speed;
 				}
 				else if (PID_Sensor_Data.Out < 0)
 				{
-					PID_Motor1.Target = Target_Speed + PID_Sensor_Data.Out + 5;
+					PID_Motor1.Target = Target_Speed + PID_Sensor_Data.Out;
+					PID_Motor2.Target = Target_Speed;
 				}
 				
-				if (Sensor_Data_Bit[2] == 1)
-				{
-					if (PID_Motor2.Target <= Target_Speed)
-					{
-						PID_Motor2.Target += 4;
-					}
+				// if (Sensor_Data_Bit[2] == 1)
+				// {
+				// 	if (PID_Motor2.Target <= Target_Speed)
+				// 	{
+				// 		PID_Motor2.Target += 4;
+				// 	}
 					
-					if (PID_Motor1.Target <= Target_Speed)
-					{
-						PID_Motor1.Target += 4;
-					}
-				}
+				// 	if (PID_Motor1.Target <= Target_Speed)
+				// 	{
+				// 		PID_Motor1.Target += 4;
+				// 	}
+				// }
 				uint8_t count_Signal = 0;
 				for (int i = 0; i < 5; i++)
 				{

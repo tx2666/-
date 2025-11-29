@@ -172,11 +172,11 @@ void PID_Sensor_Caculate(PID_Data_Typedef *pData, PID_Mode Mode)
 	// 输出限幅
 	if (pData->Out >= Target_Speed)
 	{
-		pData->Out = (Target_Speed + 80);
+		pData->Out = (Target_Speed + 160);
 	}
 	else if (pData->Out <= -Target_Speed)
 	{
-		pData->Out = -(Target_Speed + 80);
+		pData->Out = -(Target_Speed + 160);
 	}
 }
 
